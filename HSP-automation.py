@@ -27,11 +27,11 @@ exception_logger = setup_logger('Exception_Logger', 'booking_exceptions.log', 'w
 
 booking_logger = setup_logger('Booking_Logger', 'booking.log','a')
 
-service = Service('./geckodriver')
-
+service = Service('/usr/local/bin')
 options = Options()
 options.add_argument("-headless")
 driver = webdriver.Firefox(service=service, options=options)
+
 returnValue = ""
 
 def book(url, Xpath, email, passwd):
@@ -40,8 +40,8 @@ def book(url, Xpath, email, passwd):
     select_free_training()
     sleep(1)
     login(email,passwd)
-    # sleep(1)
-    # confirm()
+    sleep(1)
+    confirm()
     #sleep(1)
     #evaluate_success()
 
@@ -59,8 +59,7 @@ def select_free_training():     #einzelden termin buchen wenn er buchbar ist
             date = row.find_element(By.XPATH, ".//label/div[1]/div[2]").text        #the date of the booked course
             time = row.find_element(By.XPATH, ".//label/div[1]/div[3]").text        #and time -//-
             booking_btn.click()         #if the table element has a booking-btn then click it
-            #04.10.2022
-            #13.20-14.30
+            
             start = date + " " + time.split("-")[0].replace(".",":")
             end = date + " " + time.split("-")[1].replace(".",":")
             returnValue = start + "," + end

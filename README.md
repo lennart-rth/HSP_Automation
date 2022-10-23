@@ -10,7 +10,8 @@ An Cronjob automation that automaticly books your sport courses for the Hochschu
 ## Installation
 1. `python3 -m venv venv`
 2. `source venv/bin/activate`
-3.  `pip3 install -r requirements.txt`
+3. `pip3 install -r requirements.txt`
+4. get geckodriver fro your us from here: https://github.com/mozilla/geckodriver/releases
 
 ### User specific setup
 1. Make file called `settings.ini` and write:\
