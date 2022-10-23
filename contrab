@@ -1,0 +1,33 @@
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+#31 19 * * 5 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Radfahren Lennart  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+#1 19 * * 2 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Laufen Lennart  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+31 18 * * 1 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Schwimmen_Mo Lennart  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+46 18 * * 3 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Schwimmen_Mi Lennart  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+#1 16 * * 6 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Schwimmen_Sa Lennart  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+
+1 17 * * 1 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py HIIT Anna  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+1 17 * * 4 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Ruecken_Do Anna  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+46 8 * * 5 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Bauch_Ruecken_Stretch Anna  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
+1 16 * * 5 cd ~/infhome/Documents/HSP_Automation; python3 HSP-automation.py Dance_Fitness Anna  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt
