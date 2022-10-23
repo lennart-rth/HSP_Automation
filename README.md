@@ -30,5 +30,5 @@ Make a cronjob with the command:\
  `cd /path/to/your/dir; python3 HSP-automation.py Sport Name  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt`\
  <em><strong>!!! Change your Name and Sport accordingly</strong></em>
 
-## Automatically generate calender appointments
+## Automatically generate calendar appointments
 `fetch_bokking.sh` allows to retrieve information about the last succesfull booking. You can use it to automaticly generate a calender appointement, by calling this script from a Ios Shortcuts automation.
