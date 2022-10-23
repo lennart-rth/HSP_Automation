@@ -40,8 +40,8 @@ def book(url, Xpath, email, passwd):
     select_free_training()
     sleep(1)
     login(email,passwd)
-    sleep(1)
-    confirm()
+    # sleep(1)
+    # confirm()
     #sleep(1)
     #evaluate_success()
 
@@ -133,6 +133,7 @@ if __name__ == "__main__":
         course = config[user][courseNr]
         emails = os.environ.get('EMAIL')
         passwords = os.environ.get('PASSWORD')
+
         try:
             book(course[0], course[1], emails[user], passwords[user])
         except Exception as e:
