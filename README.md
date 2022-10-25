@@ -11,7 +11,7 @@ An Cronjob automation that automaticly books your sport courses for the Hochschu
 1. `python3 -m venv venv`
 2. `source venv/bin/activate`
 3. `pip3 install -r requirements.txt`
-4. get geckodriver fro your us from here: https://github.com/mozilla/geckodriver/releases
+4. get geckodriver for your OS from here: https://github.com/mozilla/geckodriver/releases
 
 ### User specific setup
 1. Make file called `settings.ini` and write:\
@@ -31,4 +31,4 @@ Make a cronjob with the command:\
  <em><strong>!!! Change your Name and Sport accordingly</strong></em>
 
 ## Automatically generate calendar appointments
-`fetch_bokking.sh` allows to retrieve information about the last succesfull booking. You can use it to automaticly generate a calender appointement, by calling this script from a Ios Shortcuts automation.
+`fetch_bokking.sh` allows to retrieve information about the last succesfull booking. You can use it to automaticly generate a calender appointement, by calling this script from a IOS Shortcuts automation.
