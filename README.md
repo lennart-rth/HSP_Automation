@@ -1,23 +1,21 @@
 # HSP-booking-automation
-An Cronjob automation that automaticly books your sport courses for the Hochschulsport Hamburg. This only works for the HSP "Sport-Card".
+An Cronjob automation that automaticly books your sport courses for the Hochschulsport Hamburg. This only works in combination with the HSP "Ab zum Sport Card".
 
-
-
-1. It runs 1 min. after the course has started and books for next week.
-2. Requires Firefox´s geckodriver in same place as the HSP-automation.py file.
-3. Logs can be found in `booking.log` and exeptions in `booking_exceptions.log`. Crontab output is found in `crontab_log.txt`. 
+1. It runs 5 min. after the course has started and books for next week.
+2. Requires Firefox´s or Chromes geckodriver in bash etc
+3. Logs and Errors can be found in `executions.txt`. Crontab output is found in `crontab_log.txt`. 
 
 ## Installation
 1. `python3 -m venv venv`
 2. `source venv/bin/activate`
 3. `pip3 install -r requirements.txt`
-4. get geckodriver for your OS from here: https://github.com/mozilla/geckodriver/releases
+4. get geckodriver for your OS from here: https://github.com/mozilla/geckodriver/releases. To run the script on Raspberry Pi you may have to use Chromes Selenium Driver.
 
 ### User specific setup
 1. Make file called `settings.ini` and write:\
-    <code>[Name]\
+    <code>[Your Name]\
     Sport=[url_to_sport_website_with_booking_button,XPATH_to_booking_button]</code>\
-     <em><strong>!!! Change your Name and Sport accordingly</strong></em>
+     <em><strong>!!! Change "Your Name" and "Sport"-Value accordingly</strong></em>
 2. Make file called `.env` with your credentials:\
 <code>EMAIL={"Name":"name@email.com"}\
 PASSWORD={"Name":"your_secret_passwd"}</code>\
@@ -27,8 +25,8 @@ PASSWORD={"Name":"your_secret_passwd"}</code>\
 
 ## Run the automation
 Make a cronjob with the command:\
- `cd /path/to/your/dir; python3 HSP-automation.py Sport Name  >> ~/infhome/Documents/HSP_Automation/crontab_log.txt`\
- <em><strong>!!! Change your Name and Sport accordingly</strong></em>
+ `35 19 * * 1 sh ~/HSP_Automation/run_booking.sh "Sport" "Your Name"`\
+ <em><strong>!!! Change "Your Name" and "Sport"-Value and Crontab-Timing accordingly</strong></em>
 
 ## Automatically generate calendar appointments
 `fetch_bokking.sh` allows to retrieve information about the last succesfull booking. You can use it to automaticly generate a calender appointement, by calling this script from a IOS Shortcuts automation.
