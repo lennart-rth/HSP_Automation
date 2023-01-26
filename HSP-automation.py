@@ -99,14 +99,14 @@ def confirm():
 
     driver.find_element(By.XPATH, verbindlich_buchen_field).click()      #verbindlich buchen klicken
 
-    log_result("ical",f"{returnValue}, {courseNr}, {user};")
+    log_result("ical.txt",f"{returnValue}, {courseNr}, {user};")
     log_to_file("executions.txt",f"{datetime.today()} - {courseNr} - {user} - crontab executed successfully\n")
 
     #driver.switch_to.window(driver.window_handles[-1])      #tab wechseln
 
 def evaluate_success():
     success = driver.find_element(By.XPATH, "//html/body/div/div[2]/div[1]/span[1]").text       #if this text is Bestätigung the booking was succesfull 
-    
+
     if success == "Bestätigung":
         print(returnValue)
     else:

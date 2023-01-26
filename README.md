@@ -9,7 +9,7 @@ An Cronjob automation that automaticly books your sport courses for the Hochschu
 1. `python3 -m venv venv`
 2. `source venv/bin/activate`
 3. `pip3 install -r requirements.txt`
-4. get geckodriver for your OS from here: https://github.com/mozilla/geckodriver/releases. To run the script on Raspberry Pi you may have to use Chromes Selenium Driver.
+4. get geckodriver for your OS from here: https://github.com/mozilla/geckodriver/releases. To run the script on Raspberry Pi you may have to use Chromes Selenium Driver (`sudo apt-get install chromium-chromedriver` or `sudo apt-get install chromium-browser`).
 
 ### User specific setup
 1. Make file called `settings.ini` and write:\
@@ -28,5 +28,3 @@ Make a cronjob with the command:\
  `35 19 * * 1 sh ~/HSP_Automation/run_booking.sh "Sport" "Your Name"`\
  <em><strong>!!! Change "Your Name" and "Sport"-Value and Crontab-Timing accordingly</strong></em>
 
-## Automatically generate calendar appointments
-`fetch_bokking.sh` allows to retrieve information about the last succesfull booking. You can use it to automaticly generate a calender appointement, by calling this script from a IOS Shortcuts automation.
