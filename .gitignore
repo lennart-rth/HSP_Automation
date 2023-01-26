@@ -1,4 +1,7 @@
 .env
 *.ini
-*.log
+*.json
 venv/
+booked.txt
+crontab_log.txt
+executions.txt

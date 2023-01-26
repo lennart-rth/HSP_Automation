@@ -9,6 +9,8 @@ import logging
 import configparser
 import dotenv
 
+from post_event import add_to_calendar
+
 dotenv.load_dotenv()
 
 config = configparser.ConfigParser()
@@ -31,6 +33,7 @@ driver = webdriver.Chrome(options=options)
 returnValue = ""
 
 def book(url, Xpath, email, passwd):
+    response = None
     select_course(url,Xpath)
     sleep(1)
     bookable = select_free_training()
@@ -38,11 +41,12 @@ def book(url, Xpath, email, passwd):
         sleep(1)
         login(email,passwd)
         sleep(1)
-        confirm()
+        response = confirm()
     else:
         log_to_file("executions.txt",f"{datetime.today()} - Kein freier Termin zum Buchen des Kurses verfügbar.\n")
     #sleep(1)
     #evaluate_success()
+    return response
 
 def select_course(url,Xpath):
     driver.get(url)         #url zu der Webseite des Sport
@@ -62,11 +66,12 @@ def select_free_training():     #einzelden termin buchen wenn er buchbar ist
             booking_btn = row.find_element(By.XPATH, ".//label/div[2]/input")
             date = row.find_element(By.XPATH, ".//label/div[1]/div[2]").text        #the date of the booked course
             time = row.find_element(By.XPATH, ".//label/div[1]/div[3]").text        #and time -//-
+            courseName = driver.find_element(By.XPATH,'//*[@id="bs_ag_name"]').text
             booking_btn.click()         #if the table element has a booking-btn then click it
 
             start = date + " " + time.split("-")[0].replace(".",":")
             end = date + " " + time.split("-")[1].replace(".",":")
-            returnValue = start + "," + end
+            returnValue = start + "," + end + "," + courseName
             success = True
             break
         except:
@@ -99,10 +104,11 @@ def confirm():
 
     driver.find_element(By.XPATH, verbindlich_buchen_field).click()      #verbindlich buchen klicken
 
-    log_result("ical.txt",f"{returnValue}, {courseNr}, {user};")
+    log_result("booked.txt",f"{returnValue}, {courseNr}, {user};")
     log_to_file("executions.txt",f"{datetime.today()} - {courseNr} - {user} - crontab executed successfully\n")
 
     #driver.switch_to.window(driver.window_handles[-1])      #tab wechseln
+    return {'name':user,'courseID':returnValue.split(",")[2], 'start': returnValue.split(",")[0], 'end': returnValue.split(",")[1]}
 
 def evaluate_success():
     success = driver.find_element(By.XPATH, "//html/body/div/div[2]/div[1]/span[1]").text       #if this text is Bestätigung the booking was succesfull 
@@ -123,6 +129,11 @@ if __name__ == "__main__":
         emails = eval(os.environ.get('EMAIL'))
         passwords = eval(os.environ.get('PASSWORD'))
 
-        book(course[0], course[1], emails[user], passwords[user])
+        response = book(course[0], course[1], emails[user], passwords[user])
+
+        if eval(os.environ.get('CALID'))[user]:
+            add_to_calendar(response)
+        else:
+            print("No Google calender integrated. Just booking without creating a event.")
 
         driver.quit()
