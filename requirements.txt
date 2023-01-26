@@ -1,2 +1,4 @@
-python-dotenv==0.21.0
-selenium==4.5.0
+google_api_python_client==2.74.0
+protobuf==4.21.12
+python-dotenv==0.21.1
+selenium==4.8.0
