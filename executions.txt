@@ -1,3 +1,0 @@
-2023-01-26 12:14:30.8086582023-01-26 12:14:30.808400 - test - Anna - crontab executed successfully
-2023-01-26 12:21:11.6240632023-01-26 12:21:11.623679 - Kein freier Termin zum Buchen des Kurses verfügbar.
-2023-01-26 12:23:51.6162382023-01-26 12:23:51.615943 - test - Anna - crontab executed successfully
