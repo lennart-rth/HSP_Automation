@@ -104,7 +104,7 @@ def confirm():
 
     driver.find_element(By.XPATH, verbindlich_buchen_field).click()      #verbindlich buchen klicken
 
-    log_result("booked.txt",f"{returnValue}, {courseNr}, {user};")
+    log_result("booked.txt",f"{returnValue}, {courseNr}, {user};\n")
     log_to_file("executions.txt",f"{datetime.today()} - {courseNr} - {user} - crontab executed successfully\n")
 
     #driver.switch_to.window(driver.window_handles[-1])      #tab wechseln
