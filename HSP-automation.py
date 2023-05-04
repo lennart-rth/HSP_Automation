@@ -27,7 +27,8 @@ def log_result(filename,content):
         f.write(str(content).rstrip('\n'))
 
 options = Options()
-options.headless = True
+#options.headless = True
+options.add_argument('--headless')
 driver = webdriver.Chrome(options=options)
 
 returnValue = ""
@@ -130,6 +131,7 @@ if __name__ == "__main__":
         passwords = eval(os.environ.get('PASSWORD'))
 
         response = book(course[0], course[1], emails[user], passwords[user])
+        response = {**response, **{"location":course[2]}}
 
         if eval(os.environ.get('CALID'))[user]:
             add_to_calendar(response)
