@@ -14,7 +14,7 @@ An Cronjob automation that automaticly books your sport courses for the Hochschu
 ### User specific setup
 1. Make file called `settings.ini` and write:\
     <code>[<Your_Name>]\
-    Sport=[<url_to_sport_website_with_booking_button>,<XPATH_to_booking_button>]</code>\
+    Sport=[<url_to_sport_website_with_booking_button>,<XPATH_to_booking_button>,<Location of the Event>]</code>\
      <em><strong>!!! Change all Fields with <> accordingly</strong></em>
 2. Make file called `.env` with your credentials:\
 <code>EMAIL={<Name>:<name@email.com>}\
