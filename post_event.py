@@ -22,12 +22,12 @@ def authorize(name):
     service = build('calendar', 'v3', credentials=creds)
 
 
-def add_event(courseID,s,e):
+def add_event(courseID,s,e,location):
     start = datetime.strptime(s, "%d.%m.%Y %H:%M")
     start = start.isoformat()
     end = datetime.strptime(e, "%d.%m.%Y %H:%M")
     end = end.isoformat()
-    event = { 'summary': courseID, 'start':{'dateTime': start,'timeZone':'Europe/Berlin'},'end':{'dateTime':end,'timeZone':'Europe/Berlin'}}
+    event = { 'summary': courseID,'location':location, 'start':{'dateTime': start,'timeZone':'Europe/Berlin'},'end':{'dateTime':end,'timeZone':'Europe/Berlin'}}
 
     event_result = service.events().insert(calendarId=CALID, body=event).execute()
     return event_result
@@ -37,10 +37,11 @@ def add_to_calendar(data):
         courseID = data["courseID"]
         start = data["start"]
         end = data["end"]
+        location = data["location"]
 
         authorize(name)
 
-        add_event(courseID,start,end)
+        add_event(courseID,start,end,location)
 
 # if __name__ == '__main__':
 #     add_to_calendar()
