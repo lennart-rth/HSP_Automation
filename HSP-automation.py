@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver.firefox.options import Options
 
 from time import sleep
 import sys, os
@@ -8,6 +10,7 @@ from datetime import datetime
 import logging
 import configparser
 import dotenv
+import requests
 
 from post_event import add_to_calendar
 
@@ -24,34 +27,41 @@ def log_to_file(filename,content):
 
 def log_result(filename,content):
     with open(filename,"a")as f:
-        f.write(str(content).rstrip('\n'))
+        f.write(str(content))
 
-options = Options()
-options.headless = True
+# service = Service(executable_path="/usr/bin/chromedriver")
+# options = Options()
+options = webdriver.ChromeOptions()
+
+#options.headless = True
+options.add_argument('--headless')
+options.add_argument('--no-sandbox')
 driver = webdriver.Chrome(options=options)
 
 returnValue = ""
 
-def book(url, Xpath, email, passwd):
+def book(url, Xpath, email, passwd, user, courseNr):
     response = None
-    select_course(url,Xpath)
+    select_course(url,Xpath, user, courseNr)
     sleep(1)
     bookable = select_free_training()
     if bookable:
         sleep(1)
-        login(email,passwd)
+        login(email,passwd, user, courseNr)
         sleep(1)
-        response = confirm()
+        response = confirm(user, courseNr)
     else:
-        log_to_file("executions.txt",f"{datetime.today()} - Kein freier Termin zum Buchen des Kurses verfügbar.\n")
+        log_to_file("executions.txt",f"{datetime.today()} - Kein freier Termin zum Buchen des Kurses verfuegbar\n")
+        send_notification(build_error_message(courseNr, user, f"{datetime.today().strftime('%a %H:%M')} - Kein freier Termin zum Buchen des Kurses verfuegbar"))
     #sleep(1)
     #evaluate_success()
     return response
 
-def select_course(url,Xpath):
+def select_course(url,Xpath, user, courseNr):
     driver.get(url)         #url zu der Webseite des Sport
     if driver.find_element(By.XPATH, Xpath).get_attribute("value") ==  "ausgebucht":
         log_to_file("executions.txt",f"{datetime.today()} - Kurs ist schon ausgebucht!\n")
+        send_notification(build_error_message(courseNr, user, f"{datetime.today().strftime('%a %H:%M')} - Kurs ist schon ausgebucht!"))
         return False
     driver.find_element(By.XPATH, Xpath).click()            #bei Kurs auf "vormerken" klicken
     driver.switch_to.window(driver.window_handles[-1])      #zum neuen tab wechseln
@@ -78,34 +88,44 @@ def select_free_training():     #einzelden termin buchen wenn er buchbar ist
             None
     return success
 
-def login(email, passwd):
-    email_field_path = "//html/body/form/div/div[2]/div[1]/div[2]/div[2]/input"
-    passwd_field_path = "//html/body/form/div/div[2]/div[1]/div[3]/div[2]/input"
+def login(email, passwd, user, courseNr):
+    try:
+        email_field_path = "//html/body/form/div/div[2]/div[1]/div[2]/div[2]/input"
+        passwd_field_path = "//html/body/form/div/div[2]/div[1]/div[3]/div[2]/input"
 
-    driver.find_element(By.XPATH, '//*[@id="bs_pw_anmlink"]').click()       #expands the login email/passwd fields
-    sleep(1)
-    email_field = driver.find_element(By.XPATH, email_field_path)           #fill in email
-    email_field.send_keys(email)
+        driver.find_element(By.XPATH, '//*[@id="bs_pw_anmlink"]').click()       #expands the login email/passwd fields
+        sleep(1)
+        email_field = driver.find_element(By.XPATH, email_field_path)           #fill in email
+        email_field.send_keys(email)
 
-    passwd_field = driver.find_element(By.XPATH, passwd_field_path)         #fill in passwd
-    passwd_field.send_keys(passwd)
+        passwd_field = driver.find_element(By.XPATH, passwd_field_path)         #fill in passwd
+        passwd_field.send_keys(passwd)
 
-    driver.find_element(By.XPATH, '//html/body/form/div/div[2]/div[1]/div[5]/div[1]/div[2]/input').click()      #bestätigen
+        driver.find_element(By.XPATH, '//html/body/form/div/div[2]/div[1]/div[5]/div[1]/div[2]/input').click()      #bestätigen
+    except Exception as e:
+        send_notification(build_error_message(courseNr,user, str(e)))
+        raise
 
-def confirm():
-    agb_field_path = "//html/body/form/div/div[3]/div[2]/label/input"
-    verbindlich_buchen_field = "//html/body/form/div/div[3]/div[1]/div[2]/input"
+def confirm(user, courseNr):
+    try:
+        agb_field_path = "//html/body/form/div/div[3]/div[2]/label/input"
+        verbindlich_buchen_field = "//html/body/form/div/div[3]/div[1]/div[2]/input"
 
-    agb_field = driver.find_element(By.XPATH, agb_field_path)       #check agb box
-    agb_field.click()
+        agb_field = driver.find_element(By.XPATH, agb_field_path)       #check agb box
+        agb_field.click()
 
-    sleep(5)
-    driver.find_element(By.XPATH, "//*[@id='bs_submit']").click()      #weiter zu buchen clicken
+        sleep(5)
+        driver.find_element(By.XPATH, "//*[@id='bs_submit']").click()      #weiter zu buchen clicken
 
-    driver.find_element(By.XPATH, verbindlich_buchen_field).click()      #verbindlich buchen klicken
+        driver.find_element(By.XPATH, verbindlich_buchen_field).click()      #verbindlich buchen klicken
 
-    log_result("booked.txt",f"{returnValue}, {courseNr}, {user};\n")
-    log_to_file("executions.txt",f"{datetime.today()} - {courseNr} - {user} - crontab executed successfully\n")
+        log_result("booked.txt",f"{returnValue}, {courseNr}, {user};\n")
+        log_to_file("executions.txt",f"{datetime.today()} - {courseNr} - {user} - crontab executed successfully\n")
+        send_notification(f"Succesfully booked {courseNr} for {user} at {datetime.today().strftime('%a %H:%M')}!")
+
+    except Exception as e:
+        send_notification(build_error_message(courseNr,user, str(e)))
+        raise
 
     #driver.switch_to.window(driver.window_handles[-1])      #tab wechseln
     return {'name':user,'courseID':returnValue.split(",")[2], 'start': returnValue.split(",")[0], 'end': returnValue.split(",")[1]}
@@ -118,9 +138,21 @@ def evaluate_success():
     else:
         print("Error: 'Booking not succesfull.'")
 
+def send_notification(message):
+    id = int(os.environ.get('TELEGRAMID'))
+    header={
+        "chat_id": id,
+        "text":message,
+    }
+    response = requests.post(f"https://api.telegram.org/{os.environ.get('TELEGRAMTOKEN')}/"+"sendMessage", json=header)
+
+def build_error_message(courseNr, user, msg):
+    return f"Error while booking {courseNr} for {user}!\nMessage: {msg}"
+
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
         log_to_file("executions.txt","No parameter specified\n")
+        send_notification("No parameter specified")
     else:
         courseNr = sys.argv[1]
         user = sys.argv[2]
@@ -129,11 +161,15 @@ if __name__ == "__main__":
         emails = eval(os.environ.get('EMAIL'))
         passwords = eval(os.environ.get('PASSWORD'))
 
-        response = book(course[0], course[1], emails[user], passwords[user])
+        response = book(course[0], course[1], emails[user], passwords[user], user, courseNr)
+        response = {**response, **{"location":course[2]}}
 
         if eval(os.environ.get('CALID'))[user]:
             add_to_calendar(response)
         else:
             print("No Google calender integrated. Just booking without creating a event.")
+            send_notification(build_error_message(courseNr,user,"No Google calender integrated. Just booking without creating a event."))
 
         driver.quit()
+
+
