@@ -1,8 +1,10 @@
 # HSP-booking-automation
 An Cronjob automation that automaticly books your sport courses for the Hochschulsport Hamburg. This only works in combination with the HSP "Ab zum Sport Card". If a google Calender is integrated, it will automaticly generate events for every booked course.
 
-1. It runs 5 min. after the course has started and books for next week.
-2. Requires Firefox´s or Chromes geckodriver in bash etc
+A docker image for Chromedriver is also available.
+
+1. It runs 10 min. after the course has started and books for next week.
+2. Requires Firefox´s geckodriver or Chromes Chromedriver in bash etc
 3. Logs and Errors can be found in `executions.txt`. Raw Crontab output is found in `crontab_log.txt`. A History of all booked courses is in `booked.txt`.
 
 ## Installation
@@ -10,6 +12,9 @@ An Cronjob automation that automaticly books your sport courses for the Hochschu
 2. `source venv/bin/activate`
 3. `pip3 install -r requirements.txt`
 4. get geckodriver for your OS from here: https://github.com/mozilla/geckodriver/releases. To run the script on Raspberry Pi you may have to use Chromes Selenium Driver (`sudo apt-get install chromium-chromedriver` or `sudo apt-get install chromium-browser`).
+
+## Installing for the docker image:
+1. docker build -t hspautomation .
 
 ### User specific setup
 1. Make file called `settings.ini` and write:\
@@ -36,4 +41,7 @@ If you want to integrate Google Calender you have to setup a Google Service-acco
 Make a cronjob with the command:\
  `35 19 * * 1 sh ~/HSP_Automation/run_booking.sh <Sport> <Your Name>`\
  <em><strong>!!! Change "Your Name" and "Sport"-Value and Crontab-Timing accordingly</strong></em>
+
+## To run in Docker
+`docker run --rm -w /home/pi/HSP_Automation -v $(pwd):/home/pi/HSP_Automation hspautomation python HSP-automation.py $1 $2 >> ~/HSP_Automation/crontab_log.txt` 
 
