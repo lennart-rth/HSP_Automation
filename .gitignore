@@ -5,3 +5,4 @@ venv/
 booked.txt
 crontab_log.txt
 executions.txt
+__pycache__

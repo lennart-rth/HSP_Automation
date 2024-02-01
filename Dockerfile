@@ -1,5 +1,6 @@
 # Build CMD: docker build -t hspautomation .
 # RUN CMD: docker run --rm -w /home/pi/HSP_Automation -v $(pwd):/home/pi/HSP_Automation hspautomation python HSP-automation.py Radfahren Lennart
+# In crontab it is run with sh ~/HSP_Automation/run_booking.sh Laufen Lennart
 
 FROM python:3.10-buster
 
